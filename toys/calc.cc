@@ -1,48 +1,58 @@
-#include<iostream>
-#include<vector>
-#include<string>
-#include<sstream>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <stdlib.h>
+
 template<typename T>
-class Stack {
+class Stack 
+{
 public:
-	void pop() {
+	Stack( ):topstack(-1) 
+	{
+	}
+	void pop() 
+	{
 		if (empty())
 			return ;
 		data.pop_back();
 		--topstack;
 	}
-	const T& top() {
+	
+	const T& top() 
+	{
 		return data[topstack];
 	}
-	void push(const T& item) {
+	
+	void push(const T& item) 
+	{
 		data.push_back(item);
 		++topstack;
 	}
-	bool empty() {
+	
+	bool empty() 
+	{
 		return topstack == -1 ? true : false;
 	}
 
 private:
 	std::vector<T> data;
-	int topstack = -1;
+	int topstack ;
 };
 
-long str_to_num(const std::string& s) {  //◊÷∑˚¥Æ◊™≥§’˚–Œ
-	std::istringstream str(s);
-	long num;
-	str >> num;
-	return num;
-}
-
-void expression(std::vector<std::string> &vec ,const std::string& s){   //ππ‘Ï÷–◊∫±Ì¥Ô Ω
+void expression(std::vector<std::string> &vec ,const std::string& s)
+{   //ππ‘Ï÷–◊∫±Ì¥Ô Ω
 	std::string num;
 	bool neg = false;               //≈–∂® «∑Ò∏∫ ˝
-	for (auto iter = s.begin(); iter != s.end();/*ø’*/) {
-		if (*iter >= 48 && 57 >= *iter) {
+	for (std::string::const_iterator iter = s.begin(); iter != s.end();/*ø’*/) 
+	{
+		if (*iter >= 48 && 57 >= *iter) 
+		{
 			num += *iter;
 			++iter;
 		}
-		else if (*iter == '+' || *iter == '-' || *iter == '*' || *iter == '/') {
+		else if (*iter == '+' || *iter == '-' || *iter == '*' || *iter == '/') 
+		{
 			if (num.size() != 0)
 				vec.push_back(num);
 			num = *iter;
@@ -50,12 +60,15 @@ void expression(std::vector<std::string> &vec ,const std::string& s){   //ππ‘Ï÷–
 			num = "";
 			++iter;
 		}
-		else if (*iter == '(') {                  //¥¶¿Ì∏∫ ˝«Èøˆ
-			if (num.size() != 0) {
+		else if (*iter == '(') 
+		{                  //¥¶¿Ì∏∫ ˝«Èøˆ
+			if (num.size() != 0) 
+			{
 				vec.push_back(num);
 				num = "";
 			}
-			if (*(++iter) == '-') {
+			if (*(++iter) == '-') 
+			{
 				neg = true;
 				num += '-';
 				++iter;
@@ -63,8 +76,10 @@ void expression(std::vector<std::string> &vec ,const std::string& s){   //ππ‘Ï÷–
 			else 
 				vec.push_back("(");
 		}
-		else if (*iter == ')') {
-			if (num.size() != 0) {
+		else if (*iter == ')') 
+		{
+			if (num.size() != 0) 
+			{
 				vec.push_back(num);
 				if (!neg)
 					vec.push_back(")");
@@ -78,31 +93,41 @@ void expression(std::vector<std::string> &vec ,const std::string& s){   //ππ‘Ï÷–
 		vec.push_back(num);
 }
 
-void postfix_exp(std::vector<std::string> &p_vec, std::vector<std::string> &vec) {   //ππ‘Ï∫Û◊∫±Ì¥Ô Ω
+void postfix_exp(std::vector<std::string> &p_vec, std::vector<std::string> &vec) 
+{   //ππ‘Ï∫Û◊∫±Ì¥Ô Ω
 	Stack<std::string> sta;
-	for (auto &oper : vec) {
-		if (oper == "+" || oper == "-") {
-			while (true) {
+		for (std::vector<std::string>::iterator oper=vec.begin();
+			oper!=vec.end();++oper) 
+		{
+		if (*oper == "+" || *oper == "-") 
+		{
+			while (true) 
+			{
 				if (sta.empty() || sta.top() == "(")
 					break;
 				p_vec.push_back(sta.top());
 				sta.pop();
 			}
-			sta.push(oper);
+			sta.push(*oper);
 		}
-		else if (oper == "*" || oper == "/") {
-			while (true) {
+		else if (*oper == "*" || *oper == "/") 
+		{
+			while (true) 
+			{
 				if (sta.empty() || sta.top() == "+" ||
 					sta.top() == "-" || sta.top() == "(")
 					break;
 				p_vec.push_back(sta.top());
 				sta.pop();
 			}
-		    sta.push(oper);
+		    sta.push(*oper);
 		}
-		else if (oper == ")") {
-			while (true) {
-				if (sta.top() == "(") {
+		else if (*oper == ")") 
+		{
+			while (true) 
+			{
+				if (sta.top() == "(") 
+				{
 					sta.pop();
 					break;
 				}
@@ -110,44 +135,55 @@ void postfix_exp(std::vector<std::string> &p_vec, std::vector<std::string> &vec)
 				sta.pop();
 			}
 		}
-		else sta.push(oper);
+		else sta.push(*oper);
 	}
-	while (!sta.empty()) {
+	while (!sta.empty()) 
+	{
 		p_vec.push_back(sta.top());
 		sta.pop();
 	}
 	std::cout << "The postfix-expression is : ";
-	for (auto &row : p_vec)
-		std::cout << row<<" ";
+	for (std::vector<std::string>::iterator oper=p_vec.begin();
+			oper!=p_vec.end();++oper) 
+	{
+		std::cout << *oper <<" ";
+	}
 	std::cout << std::endl;
 }
 
-const long count(std::vector<std::string> &vec) {            //¿˚”√∫Û◊∫±Ì¥Ô Ωº∆À„
+const long count(std::vector<std::string> &vec) 
+{            //¿˚”√∫Û◊∫±Ì¥Ô Ωº∆À„
 	Stack<long> sta;
-	for (auto &oper : vec) {
+	for (std::vector<std::string>::iterator oper=vec.begin();
+			oper!=vec.end();++oper) 
+	{
 		long lhs = 0, rhs = 0;
-		if (oper=="+") {
+		if (*oper=="+") 
+		{
 			rhs = sta.top();
 			sta.pop();
 			lhs = sta.top();
 			sta.pop();
 			sta.push(lhs + rhs);
 		}
-		else if (oper == "-") {
+		else if (*oper == "-") 
+		{
 			rhs = sta.top();
 			sta.pop();
 			lhs = sta.top();
 			sta.pop();
 			sta.push(lhs - rhs);
 		}
-		else if (oper == "*") {
+		else if (*oper == "*") 
+		{
 			rhs = sta.top();
 			sta.pop();
 			lhs = sta.top();
 			sta.pop();
 			sta.push(lhs * rhs);
 		}
-		else if (oper == "/") {
+		else if (*oper == "/") 
+		{
 			rhs = sta.top();
 			sta.pop();
 			lhs = sta.top();
@@ -155,7 +191,7 @@ const long count(std::vector<std::string> &vec) {            //¿˚”√∫Û◊∫±Ì¥Ô Ωº∆À
 			sta.push(lhs / rhs);
 		}
 		else
-			sta.push(str_to_num(oper));
+			sta.push(atoi(oper->c_str()));
 	}
 	if (!sta.empty())
 		return sta.top();
@@ -163,8 +199,10 @@ const long count(std::vector<std::string> &vec) {            //¿˚”√∫Û◊∫±Ì¥Ô Ωº∆À
 		return 0;
 }
 
-int main() {
-	while (true) {
+int main() 
+{
+	while (true) 
+	{
 		std::string str;
 		std::cout << "Enter the expression,or q for quit : ";
 		std::cin >> str;
