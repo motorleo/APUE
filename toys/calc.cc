@@ -41,10 +41,10 @@ private:
 };
 
 void expression(std::vector<std::string> &vec ,const std::string& s)
-{   //构造中缀表达式
+{   // construct expression
 	std::string num;
-	bool neg = false;               //判定是否负数
-	for (std::string::const_iterator iter = s.begin(); iter != s.end();/*空*/) 
+	bool neg = false;               //for if negative
+	for (std::string::const_iterator iter = s.begin(); iter != s.end(); ) 
 	{
 		if (*iter >= 48 && 57 >= *iter) 
 		{
@@ -61,7 +61,7 @@ void expression(std::vector<std::string> &vec ,const std::string& s)
 			++iter;
 		}
 		else if (*iter == '(') 
-		{                  //处理负数情况
+		{                  //for (negative)
 			if (num.size() != 0) 
 			{
 				vec.push_back(num);
@@ -94,7 +94,7 @@ void expression(std::vector<std::string> &vec ,const std::string& s)
 }
 
 void postfix_exp(std::vector<std::string> &p_vec, std::vector<std::string> &vec) 
-{   //构造后缀表达式
+{   //construct RPN expression
 	Stack<std::string> sta;
 		for (std::vector<std::string>::iterator oper=vec.begin();
 			oper!=vec.end();++oper) 
@@ -152,7 +152,7 @@ void postfix_exp(std::vector<std::string> &p_vec, std::vector<std::string> &vec)
 }
 
 const long count(std::vector<std::string> &vec) 
-{            //利用后缀表达式计算
+{            
 	Stack<long> sta;
 	for (std::vector<std::string>::iterator oper=vec.begin();
 			oper!=vec.end();++oper) 
