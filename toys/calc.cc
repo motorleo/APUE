@@ -46,7 +46,7 @@ void expression(std::vector<std::string> &vec ,const std::string& s)
 	bool neg = false;               //for if negative
 	for (std::string::const_iterator iter = s.begin(); iter != s.end(); ) 
 	{
-		if (*iter >= 48 && 57 >= *iter) 
+		if (*iter >= '0' && '9' >= *iter) 
 		{
 			num += *iter;
 			++iter;
