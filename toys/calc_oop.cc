@@ -31,7 +31,7 @@ private:
 class BinaryNode : public Node
 {
 public:
-	BinaryNode(NodePtr l,NodePtr r)
+	BinaryNode(const NodePtr& l,const NodePtr& r)
 		:left(l),right(r){}
 
 
@@ -43,7 +43,7 @@ protected:
 class AddNode : public BinaryNode
 {
 public:
-	AddNode(NodePtr l,NodePtr r)
+	AddNode(const NodePtr& l,const NodePtr& r)
 		:BinaryNode(l,r) {}
 	int calculate() const { return left->calculate()+right->calculate();}
 };
@@ -51,7 +51,7 @@ public:
 class MinusNode : public BinaryNode
 {
 public:
-	MinusNode(NodePtr l,NodePtr r)
+	MinusNode(const NodePtr& l,const NodePtr& r)
 		:BinaryNode(l,r) {}
 	int calculate() const { return left->calculate()-right->calculate();}
 };
@@ -59,7 +59,7 @@ public:
 class MultiplyNode : public BinaryNode
 {
 public:
-	MultiplyNode(NodePtr l,NodePtr r)
+	MultiplyNode(const NodePtr& l,const NodePtr& r)
 		:BinaryNode(l,r) {}
 	int calculate() const { return left->calculate()*right->calculate();}
 };
@@ -67,7 +67,7 @@ public:
 class DevideNode : public BinaryNode
 {
 public:
-	DevideNode(NodePtr l,NodePtr r)
+	DevideNode(const NodePtr& l,const NodePtr& r)
 		:BinaryNode(l,r) {}
 	int calculate() const { return left->calculate()/right->calculate();}
 };
@@ -76,7 +76,7 @@ template <typename T>
 class Stack
 {
 public:
-	void push(T t) { stack.push_back(t);}
+	void push(const T& t) { stack.push_back(t);}
 
 	T pop()
 	{
@@ -85,7 +85,7 @@ public:
 		return temp;
 	}
 
-	T peek() { return stack.back();}
+	T& peek() { return stack.back();}
 
 	int size() { return stack.size();}
 
@@ -116,7 +116,7 @@ private:
 		}
 	}
 
-	NodePtr makeNode(const char op,NodePtr l,NodePtr r)
+	NodePtr makeNode(const char op,const NodePtr& l,const NodePtr& r)
 	{
 		switch (op)
 		{
@@ -143,7 +143,7 @@ private:
 		}
 	}
 
-	void makeTree(std::string& str)
+	void makeTree(const std::string& str)
 	{
 		Stack<NodePtr> nodeStack;
 		Stack<char> opStack;
@@ -202,6 +202,7 @@ private:
 			nodeStack.push(
 					makeNode(opStack.pop(),nodeStack.pop(),nodeStack.pop()));
 		}
+
 
 		if (nodeStack.size() != 1)
 		{
