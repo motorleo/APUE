@@ -85,7 +85,7 @@ public:
 		return temp;
 	}
 
-	T& peek() { return stack.back();}
+	const T& peek() { return stack.back();}
 
 	int size() { return stack.size();}
 
@@ -96,7 +96,7 @@ private:
 class ExpTree
 {
 public:
-	ExpTree(std::string& str) { makeTree(str);}
+	ExpTree(const std::string& str) { makeTree(str);}
 
 	int calculate() {return root->calculate();}
 
