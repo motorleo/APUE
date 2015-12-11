@@ -170,18 +170,20 @@ private:
 					opStack.push(str[i]);
 					break;
 				case ')':
-					while (Precedence(opStack.peek())>0) //pop all operator
+					while (Precedence(opStack.peek())>0) 
 					{
-						nodeStack.push(
-								makeNode(opStack.pop(),nodeStack.pop(),nodeStack.pop()));
+						NodePtr r=nodeStack.pop();
+						NodePtr	l=nodeStack.pop();
+						nodeStack.push(makeNode(opStack.pop(),l,r));
 					}
 					opStack.pop();
 					break;
 				case '+':case '-':case '*':case '/':
 					while (Precedence(opStack.peek())>=Precedence(str[i]))
 					{
-						nodeStack.push(
-								makeNode(opStack.pop(),nodeStack.pop(),nodeStack.pop()));
+						NodePtr r=nodeStack.pop();
+						NodePtr	l=nodeStack.pop();
+						nodeStack.push(makeNode(opStack.pop(),l,r));
 					}
 					opStack.push(str[i]);
 					break;
@@ -199,8 +201,9 @@ private:
 
 		while (opStack.peek()!='@')
 		{
-			nodeStack.push(
-					makeNode(opStack.pop(),nodeStack.pop(),nodeStack.pop()));
+			NodePtr r=nodeStack.pop();
+			NodePtr	l=nodeStack.pop();
+			nodeStack.push(makeNode(opStack.pop(),l,r));
 		}
 
 
