@@ -1,7 +1,8 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 #include <string>
-
+#include <deque>
+//#include <list> 
 
 class Node
 {
@@ -88,7 +89,7 @@ public:
 	int size() { return stack.size();}
 
 private:
-	std::vector<T> stack;
+	std::deque<T> stack;
 };
 
 class ExpTree
