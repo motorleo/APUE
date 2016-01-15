@@ -16,11 +16,17 @@ public:
 
 	const std::string& getPath() const { return path_; }
 
-	void setPath(const std::string& value) { path_ = value; }
+	void setPath(const char* begin,const char* end)
+   	{
+	   	path_.assign(begin,end);
+   	}
 
 	const std::string& getQuery() const { return query_; }
 
-	void setQuery(const std::string& value) { query_ = value; }
+	void setQuery(const char* begin,const char* end)
+   	{
+	   	query_.assign(begin,end);
+   	}
 
 	std::string getVersion() const;
 

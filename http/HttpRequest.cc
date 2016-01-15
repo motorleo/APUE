@@ -52,12 +52,12 @@ bool HttpRequest::parseRequestLine(const char* begin,const char* end)
 	const char* query = std::find(iter,end,'?');
 	if (query != end)
 	{
-		setPath(std::string(iter,query));
-		setQuery(std::string(query + 1,path));
+		setPath(iter,query);
+		setQuery(query + 1,path);
 	}
 	else
 	{
-		setPath(std::string(iter,path));
+		setPath(iter,path);
 	}
 	iter = path + 1;
 	if (!setVersion(iter,end)) return false;
