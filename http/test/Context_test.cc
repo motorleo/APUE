@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE Httptest
-#include "../HttpRequest.h"
-#include "../HttpResponse.h"
+#include "../src/HttpRequest.h"
+#include "../src/HttpResponse.h"
 #include <boost/test/included/unit_test.hpp>
 
 #include <string>

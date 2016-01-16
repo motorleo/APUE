@@ -55,7 +55,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 include_directories(${PROJECT_SOURCE_DIR})
 
-aux_source_directory(. SRC_DIR)
+aux_source_directory(src SRC_DIR)
 add_library(maxiaoda ${SRC_DIR})
 target_link_libraries(maxiaoda ${muduo_net})
 target_link_libraries(maxiaoda ${muduo_base})
