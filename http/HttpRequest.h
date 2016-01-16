@@ -16,16 +16,18 @@ public:
 
 	const std::string& getPath() const { return path_; }
 
-	void setPath(const char* begin,const char* end)
+	bool setPath(const char* begin,const char* end)
    	{
 	   	path_.assign(begin,end);
+		return true;
    	}
 
 	const std::string& getQuery() const { return query_; }
 
-	void setQuery(const char* begin,const char* end)
+	bool setQuery(const char* begin,const char* end)
    	{
 	   	query_.assign(begin,end);
+		return true;
    	}
 
 	std::string getVersion() const;
