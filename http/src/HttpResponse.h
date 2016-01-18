@@ -46,7 +46,7 @@ public:
 
 	const std::vector<std::string>& getHeaders() { return headers_; }
 
-	bool setBody(const std::string* body) { body_ = body; return true; }
+	bool setBody(const std::string& body) { body_ = body; return true; }
 
 	bool appendBuffer(muduo::net::Buffer* buf);
 private:
@@ -54,7 +54,7 @@ private:
 	Status status_;
 	std::string reason_;
 	std::vector<std::string> headers_;
-	const std::string* body_;
+	std::string body_;
 };
 }//namespace leo
 #endif

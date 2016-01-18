@@ -62,8 +62,6 @@ target_link_libraries(maxiaoda ${muduo_base})
 target_link_libraries(maxiaoda pthread)
 
 add_subdirectory(./test)
+add_subdirectory(./demo)
 
-#add_executable(test1 ./test/Request_test.cc)
-#target_link_libraries(test1 ${muduo_net})
-#target_link_libraries(test1 ${muduo_base})
-#target_link_libraries(test1 pthread rt maxiaoda)
+

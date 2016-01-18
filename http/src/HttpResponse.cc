@@ -87,7 +87,11 @@ bool HttpResponse::appendBuffer(muduo::net::Buffer* buf)
 	}
 	response += "\r\n";
 	buf->append(response);
-	if (body_) buf->append(*body_);
+	if (!body_.empty()) 
+	{
+		buf->append(body_);
+		buf->append("\r\n");
+	}
 	return true;
 }
 }//namespace leo

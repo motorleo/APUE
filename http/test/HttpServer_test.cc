@@ -8,7 +8,7 @@ void onHttp(const leo::HttpRequest* request,leo::HttpResponse* response)
 	response->setVersion("1.1");
 	response->setStatus("200");
 	response->setReason("OK");
-	response->setBody(&str);
+	response->setBody(str);
 }
 
 int main()
