@@ -12,15 +12,13 @@ namespace leo
 {
 class HttpServer : public boost::noncopyable
 {
-typedef boost::function<void (const HttpRequest*,
-							  HttpResponse*)> HttpCallback;
 public:
 	HttpServer(muduo::net::EventLoop* loop,
 			   const muduo::net::InetAddress& listenAddr);
 
 	void start() { server_.start(); }
 
-	void setHttpCallback(const HttpCallback& cb) { cb_ = cb; }
+	void setDefaultPath(const std::string& path) { defaultPath_ = path; }
 private:
 	void kickOvertime(const muduo::net::TcpConnectionPtr& conn);
 
@@ -30,8 +28,12 @@ private:
 				   muduo::net::Buffer* buf,
 				   muduo::Timestamp time);
 
+	void staticServe(HttpRequest* request,
+					 HttpResponse* response,
+					 muduo::net::Buffer* buf);
+
 	muduo::net::EventLoop* loop_;
-	HttpCallback cb_;
+	std::string defaultPath_;
 	muduo::net::TcpServer server_;
 };
 }//namespace leo

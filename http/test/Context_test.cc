@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE (HttpRequest_test)
 	buf.append(str);
 	test.parseFormBuffer(&buf);
 	BOOST_CHECK_EQUAL(test.getMethod(),"GET");
-	BOOST_CHECK_EQUAL(test.getPath(),"/");
+	BOOST_CHECK_EQUAL(test.getPath(),"");
 	BOOST_CHECK_EQUAL(test.getVersion(),"HTTP/1.1");
 	BOOST_CHECK_EQUAL(test.getHeader("Host"),"local");
 }

@@ -16,6 +16,12 @@ public:
 
 	const std::string& getPath() const { return path_; }
 
+	bool setPath(const std::string& path)
+	{
+		path_ = path;
+		return true;
+	}
+
 	bool setPath(const char* begin,const char* end)
    	{
 	   	path_.assign(begin,end);
