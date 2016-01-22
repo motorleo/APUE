@@ -19,6 +19,7 @@ public:
 	void start() { server_.start(); }
 
 	void setDefaultPath(const std::string& path) { defaultPath_ = path; }
+
 private:
 	void kickOvertime(const muduo::net::TcpConnectionPtr& conn);
 
@@ -31,6 +32,12 @@ private:
 	void staticServe(HttpRequest* request,
 					 HttpResponse* response,
 					 muduo::net::Buffer* buf);
+
+	void dynamicServe(HttpRequest* request,
+					  HttpResponse* response,
+					  muduo::net::Buffer* buf);
+
+	std::string getCurentDir();
 
 	muduo::net::EventLoop* loop_;
 	std::string defaultPath_;

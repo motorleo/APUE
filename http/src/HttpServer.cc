@@ -3,6 +3,8 @@
 #include <muduo/net/EventLoop.h>
 #include <algorithm>
 #include <sstream>
+#include <unistd.h>
+#include <stdio.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
@@ -58,7 +60,7 @@ void HttpServer::onMessage(const muduo::net::TcpConnectionPtr& conn,
 	}
 	else//dynamic request
 	{
-		//TODO:
+		dynamicServe(&request,&response,&bufTemp);		
 	}
 	conn->send(&bufTemp);
 	if (request.getHeader("Connection") == "close") conn->shutdown();
@@ -72,11 +74,11 @@ void HttpServer::staticServe(HttpRequest* request,
 	int fd = ::open(request->getPath().c_str(),O_RDONLY);
 	if (fd == -1)
 	{
-		//FIXME:httpError();
+		//FIXME:httpError() file not find
 		return;
 	}
 	struct stat stat;//for file size
-	if (::stat(request->getPath().c_str(),&stat) < 0)
+	if (::fstat(fd,&stat) < 0)
 	{
 		LOG_FATAL << "stat error!";
 	}
@@ -102,6 +104,55 @@ void HttpServer::staticServe(HttpRequest* request,
 	close(fd);
 	buf->append(static_cast<char*>(htmlFile),stat.st_size);
 	munmap(htmlFile,stat.st_size);
+}
+
+void HttpServer::dynamicServe(HttpRequest* request,
+							  HttpResponse* response,
+							  muduo::net::Buffer* buf)
+{
+	struct stat stat;//check file
+	if (::stat(request->getPath().c_str(),&stat) < 0)
+	{
+		//TODO:file not find
+	}
+	if (!(S_IXUSR & stat.st_mode))
+	{
+		//TODO:file inexecutable
+	}
+	response->setVersion("1.1");
+	response->setStatus("200");
+	response->setReason("OK");
+	response->addHeader("Server: Leo webServer");
+	if (!response->appendBuffer(buf))
+	{
+		LOG_FATAL << "Illgal response!";
+	}
+	//execute file
+	std::string query = request->getQuery();
+	std::replace(query.begin(),query.end(),'&',' ');
+	std::string cmdString = getCurentDir() + request->getPath() + ' ' + query;
+	FILE* file = ::popen(cmdString.c_str(),"r");
+	char temp[1024];
+	while (::fgets(temp,1024,file) != NULL)
+	{
+		//printf("%s%zd\n",temp,strlen(temp));
+		buf->append(temp,strlen(temp));
+	}
+	fclose(file);
+}
+
+std::string HttpServer::getCurentDir()
+{
+	char buf[256];
+	int n = readlink("/proc/self/exe",buf,256);
+	if (n < 0 || n > 256)
+	{
+		LOG_FATAL << "readlink error!";
+	}
+	int i;
+	for (i = n; i >=0 && buf[i] != '/'; --i);
+	buf[i+1] = '\0';
+	return std::string(buf,::strlen(buf));
 }
 
 }
