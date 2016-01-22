@@ -74,7 +74,7 @@ void HttpServer::staticServe(HttpRequest* request,
 	int fd = ::open(request->getPath().c_str(),O_RDONLY);
 	if (fd == -1)
 	{
-		//FIXME:httpError() file not find
+		errorServe("404","Not Found",response,buf);
 		return;
 	}
 	struct stat stat;//for file size
@@ -111,13 +111,16 @@ void HttpServer::dynamicServe(HttpRequest* request,
 							  muduo::net::Buffer* buf)
 {
 	struct stat stat;//check file
-	if (::stat(request->getPath().c_str(),&stat) < 0)
+	std::string cmdString = getCurentDir() + request->getPath();
+	if (::stat(cmdString.c_str(),&stat) < 0)
 	{
-		//TODO:file not find
+		errorServe("400","Bad Request",response,buf);
+		return;
 	}
 	if (!(S_IXUSR & stat.st_mode))
 	{
-		//TODO:file inexecutable
+		errorServe("403","Forbidden",response,buf);
+		return;
 	}
 	response->setVersion("1.1");
 	response->setStatus("200");
@@ -130,7 +133,7 @@ void HttpServer::dynamicServe(HttpRequest* request,
 	//execute file
 	std::string query = request->getQuery();
 	std::replace(query.begin(),query.end(),'&',' ');
-	std::string cmdString = getCurentDir() + request->getPath() + ' ' + query;
+	cmdString +=' ' + query;
 	FILE* file = ::popen(cmdString.c_str(),"r");
 	char temp[1024];
 	while (::fgets(temp,1024,file) != NULL)
@@ -141,17 +144,42 @@ void HttpServer::dynamicServe(HttpRequest* request,
 	fclose(file);
 }
 
+void HttpServer::errorServe(std::string status,
+							std::string reason,
+							HttpResponse* response,
+							muduo::net::Buffer* buf)
+{
+	response->setVersion("1.1");
+	response->setStatus(status);
+	response->setReason(reason);
+	response->addHeader("Content-type: text/html");
+	std::string body = "<html>\r\n"\
+		"<title>Web Server Error</title>\r\n"\
+		"<body>\r\n"\
+		"<h2 style=\"text-align:center;\">ERROR " + status + "</h2>\r\n"\
+		"<p style=\"text-align:center;\">There is some mistake:</p>\r\n"\
+		"<p style=\"text-align:center;\">" + reason + ".</p>\r\n"\
+		"<p style=\"text-align:right;\">Leo webServer.</p>\r\n"\
+		"</body>\r\n"\
+		"</html>\r\n";
+	std::ostringstream str;
+	str << "Content-Length: " << body.size();
+	response->addHeader(str.str());
+	response->setAndSwapBody(body);
+	response->appendBuffer(buf);
+}
+
 std::string HttpServer::getCurentDir()
 {
 	char buf[256];
-	int n = readlink("/proc/self/exe",buf,256);
+	ssize_t n = readlink("/proc/self/exe",buf,256);
 	if (n < 0 || n > 256)
 	{
 		LOG_FATAL << "readlink error!";
 	}
-	int i;
-	for (i = n; i >=0 && buf[i] != '/'; --i);
-	buf[i+1] = '\0';
+	for ( ; n >=0 && buf[n] != '/'; --n);//delete filename
+	buf[n+1] = '\0';
+	//printf("%s\n",buf);
 	return std::string(buf,::strlen(buf));
 }
 

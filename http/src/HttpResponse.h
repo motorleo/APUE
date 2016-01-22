@@ -48,6 +48,8 @@ public:
 
 	bool setBody(const std::string& body) { body_ = body; return true; }
 
+	bool setAndSwapBody(std::string& body) { body_.swap(body); return true; }
+
 	bool appendBuffer(muduo::net::Buffer* buf);
 private:
 	Version version_;

@@ -37,6 +37,11 @@ private:
 					  HttpResponse* response,
 					  muduo::net::Buffer* buf);
 
+	void errorServe(std::string status,
+					std::string reason,
+					HttpResponse* response,
+					muduo::net::Buffer* buf);
+
 	std::string getCurentDir();
 
 	muduo::net::EventLoop* loop_;

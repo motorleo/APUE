@@ -90,7 +90,6 @@ bool HttpResponse::appendBuffer(muduo::net::Buffer* buf)
 	if (!body_.empty()) 
 	{
 		buf->append(body_);
-		buf->append("\r\n");
 	}
 	return true;
 }
