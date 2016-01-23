@@ -71,7 +71,9 @@ void HttpServer::staticServe(HttpRequest* request,
 							 muduo::net::Buffer* buf)
 {
 	if (request->getPath().empty()) request->setPath(defaultPath_);//url == "/"
-	int fd = ::open(request->getPath().c_str(),O_RDONLY);
+	std::string filePath = getCurentDir() + request->getPath();
+	int fd = ::open(filePath.c_str(),O_RDONLY);
+	//printf("%s\n%d\n",filePath.c_str(),fd);
 	if (fd == -1)
 	{
 		errorServe("404","Not Found",response,buf);
