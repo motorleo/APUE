@@ -1,14 +1,10 @@
 #include <stdio.h>
 
-class test
-{
-};
-
 int main()
 {
-	test a;
-	test b;
-	if (a == b) printf("OK");
-	else printf("Not OK");
+	char str[10] = "hallo";
+	printf("%d",str[11]);
+	str[5] = 's';
+	printf("%d",str[6]);
 	return 0;
 }
