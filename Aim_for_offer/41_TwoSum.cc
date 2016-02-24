@@ -26,9 +26,7 @@ void TwoSum(int* numbers,int length,int s)
 int SumOfSequence(int left,int right)
 {
 	int length = right - left + 1;
-	int result = (left + right)*(length >> 1);
-	if (length & 1)
-		result += (left + right) >> 1;
+	int result = length * (left + right) >> 1;
 	return result;
 }
 
@@ -62,7 +60,5 @@ void SequenceWithSum(int s)
 
 int main()
 {
-	int test[] = {1,2,4,7,11,15};
-	TwoSum(test,6,15);
-	SequenceWithSum(100);
+	SequenceWithSum(15);
 }
