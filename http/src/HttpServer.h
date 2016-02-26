@@ -29,6 +29,10 @@ private:
 				   muduo::net::Buffer* buf,
 				   muduo::Timestamp time);
 
+	void GETServe(HttpRequest* request,
+		          HttpResponse* response,
+				  muduo::net::Buffer* buf);
+
 	void staticServe(HttpRequest* request,
 					 HttpResponse* response,
 					 muduo::net::Buffer* buf);

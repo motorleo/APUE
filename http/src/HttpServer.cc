@@ -52,18 +52,32 @@ void HttpServer::onMessage(const muduo::net::TcpConnectionPtr& conn,
 		conn->shutdown();
 		return;
 	}
-	HttpResponse response;
-	muduo::net::Buffer bufTemp;
-	if (request.getQuery().empty())//static request
+	HttpResponse response;              
+	muduo::net::Buffer bufTemp;   
+	if (request.getMethod() == "GET")
 	{
-		staticServe(&request,&response,&bufTemp);
+		GETServe(&request,&response,&bufTemp);
+	}
+	else
+	{
+		errorServe("403","Forbidden",&response,&bufTemp); 
+	}
+	conn->send(&bufTemp);                 
+	if (request.getHeader("Connection") == "close") conn->shutdown();
+}
+
+void HttpServer::GETServe(HttpRequest* request,
+		                  HttpResponse* response,
+						  muduo::net::Buffer* buf)
+{
+	if (request->getQuery().empty())//static request
+	{
+		staticServe(request,response,buf);
 	}
 	else//dynamic request
 	{
-		dynamicServe(&request,&response,&bufTemp);		
+		dynamicServe(request,response,buf);		
 	}
-	conn->send(&bufTemp);
-	if (request.getHeader("Connection") == "close") conn->shutdown();
 }
 
 void HttpServer::staticServe(HttpRequest* request,
